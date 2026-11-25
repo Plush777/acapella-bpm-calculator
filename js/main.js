@@ -8,8 +8,9 @@ import { createClickPlayer } from './features/click-player.js';
 import { attachCopy } from './features/clipboard.js';
 import { load, save } from './features/storage.js';
 import { attachTapTempo } from './features/tap-tempo.js';
-import { byId, on, onButton, setText } from './views/dom.js';
+import { byId, on, onButton, setHidden, setText } from './views/dom.js';
 import { renderDrift } from './views/drift.js';
+import { renderPlayButton } from './views/player.js';
 import { renderRatio, renderTempo } from './views/tempo.js';
 import { hidePlayhead, renderTimeline, showPlayhead } from './views/timeline.js';
 
@@ -33,13 +34,13 @@ const songOf = (state) => ({
 const isSameSong = (a, b) => JSON.stringify(songOf(a)) === JSON.stringify(songOf(b));
 
 const player = createClickPlayer({
-  onStart: () => setText('play', '정지'),
+  onStart: () => renderPlayButton(true),
   onStop: () => {
-    setText('play', '메트로놈 재생');
+    renderPlayButton(false);
     hidePlayhead();
   },
   onProgress: (time) => showPlayhead(getState(), time),
-  onUnsupported: () => setText('drift2', '이 브라우저에서는 소리를 재생할 수 없습니다.'),
+  onUnsupported: () => setHidden('playerr', false),
 });
 
 /* ---------- 입력 연결 ---------- */

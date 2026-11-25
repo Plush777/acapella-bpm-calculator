@@ -32,13 +32,6 @@ kbd {
   border-radius: var(--radius-small);
 }
 
-.lede {
-  margin-top: 16px;
-  padding: 24px;
-  background: var(--intro);
-  border-radius: var(--radius-xlarge);
-}
-
 .note { color: var(--mute); font-size: var(--size-small); }
 
 .verdict { font-size: var(--size-h3); font-weight: 700; }

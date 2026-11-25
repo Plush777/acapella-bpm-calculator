@@ -20,6 +20,9 @@ export const setHidden = (id, hidden) => {
   byId(id).hidden = hidden;
 };
 
+/** 아이콘 그림을 바꾼다. */
+export const setIcon = (use, name) => use.setAttribute('href', `img/icons.svg#${name}`);
+
 /** 입력 중인 칸의 커서가 튀지 않도록 값이 다를 때만 넣는다. */
 export const setValue = (id, value) => {
   const el = byId(id);

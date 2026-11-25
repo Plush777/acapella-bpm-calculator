@@ -20,9 +20,9 @@ const timeToDrift = ({ bpm, beatsPerBar }) => (amount) => {
 };
 
 const detail = (state, { sec }) => {
-  if (isNegligible(sec)) return '곡의 BPM이 일정할 때의 결과입니다. 아카펠라가 들어오는 위치는 직접 맞춰 주세요.';
+  if (isNegligible(sec)) return '';
   const until = timeToDrift(state);
-  return `${until(0.5)} 뒤에는 반 박, ${until(1)} 뒤에는 한 박이 어긋납니다. 짧은 구간은 원본을 그대로 써도 괜찮지만, 긴 구간은 처음과 중간, 끝을 모두 들어 보세요.`;
+  return `${until(0.5)} 뒤에는 반 박, ${until(1)} 뒤에는 한 박이 어긋납니다.`;
 };
 
 const tableRow = (state) => (bars) => {
