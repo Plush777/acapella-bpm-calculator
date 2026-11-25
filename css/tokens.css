@@ -1,0 +1,36 @@
+/* 색과 글꼴 변수. 청록(inst)은 반주, 라즈베리(voc)는 보컬을 뜻한다. */
+:root {
+  --bg: #EBF0F0;
+  --panel: #FAFCFC;
+  --sunk: #E0E8E8;
+  --ink: #14211F;
+  --mute: #52635F;
+  --line: #C6D3D1;
+  --inst: #17646D;
+  --inst-soft: #CDE3E4;
+  --voc: #AD2C5B;
+  --voc-soft: #F3D7E1;
+  --warn: #7D5000;
+  --warn-soft: #F4E6C6;
+
+  --sans: "IBM Plex Sans KR", "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --mono: "IBM Plex Mono", "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0E1516;
+    --panel: #162021;
+    --sunk: #1E2B2C;
+    --ink: #E3ECEA;
+    --mute: #95A8A5;
+    --line: #2E3D3E;
+    --inst: #63C4CD;
+    --inst-soft: #1D3E42;
+    --voc: #F28BAE;
+    --voc-soft: #472534;
+    --warn: #E8B95F;
+    --warn-soft: #3A2F16;
+    color-scheme: dark;
+  }
+}

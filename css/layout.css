@@ -1,0 +1,47 @@
+/* 페이지 골격과 배치 */
+.wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding-block: 28px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+}
+
+.duo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+.fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.len {
+  display: grid;
+  grid-template-columns: minmax(0, 130px) auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+}
+
+.scroll { overflow-x: auto; min-width: 0; }
+
+@media (min-width: 820px) {
+  .duo.top { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); }
+  .duo.even { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+}

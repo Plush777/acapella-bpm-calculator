@@ -1,0 +1,210 @@
+/* ---------- 패널 ---------- */
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 22px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  align-content: start;
+  min-width: 0;
+}
+
+.out {
+  background: var(--sunk);
+  border-radius: 4px;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  align-content: start;
+}
+
+.hint {
+  background: var(--warn-soft);
+  color: var(--warn);
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* 정상 로딩 중에는 깜빡이지 않도록 잠시 뒤에만 나타난다 */
+.boot { visibility: hidden; animation: boot-show 1ms 1.5s forwards; }
+
+@keyframes boot-show { to { visibility: visible; } }
+
+/* ---------- 입력 ---------- */
+fieldset { border: 0; min-width: 0; }
+
+label, legend {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--mute);
+}
+
+legend { padding: 0; }
+
+input[type=number], input[type=text], select {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 9px 10px;
+  font: 500 17px/1.3 var(--mono);
+  color: var(--ink);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+
+select { font-family: var(--sans); font-size: 16px; }
+
+input[aria-invalid=true] { border-color: var(--warn); }
+
+.bpm { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+.bpm input[type=number] { padding: 6px 12px; font-size: 30px; font-weight: 600; }
+.bpm.i input { border-left: 6px solid var(--inst); }
+.bpm.v input { border-left: 6px solid var(--voc); }
+
+textarea {
+  width: 100%;
+  min-height: 200px;
+  padding: 12px;
+  font: 400 14px/1.6 var(--mono);
+  color: var(--ink);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+
+/* ---------- 버튼 ---------- */
+button {
+  min-height: 44px;
+  padding: 10px 14px;
+  font: 600 15px/1.2 var(--sans);
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+button:hover { border-color: var(--ink); }
+
+button.main { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+button.main:hover { opacity: .88; }
+
+.seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg button { flex: 1 1 auto; padding-inline: 12px; }
+.seg button[aria-pressed=true] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+/* ---------- 결과 숫자 ---------- */
+.big {
+  font: 600 clamp(52px, 12vw, 84px)/1 var(--mono);
+  letter-spacing: -.05em;
+  color: var(--voc);
+  font-variant-numeric: tabular-nums;
+}
+
+.big small { font-size: .5em; letter-spacing: 0; margin-left: .15em; }
+
+.len-out { font-size: 20px; font-weight: 600; }
+
+.pos {
+  font: 600 34px/1.1 var(--mono);
+  letter-spacing: -.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+}
+
+.facts dt { font-size: 13px; color: var(--mute); }
+.facts dd { font: 600 17px/1.4 var(--mono); font-variant-numeric: tabular-nums; }
+
+/* ---------- 표 ---------- */
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+
+th, td {
+  padding: 8px 12px 8px 0;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+th {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--mute);
+  text-align: left;
+  white-space: nowrap;
+}
+
+tr:last-child td { border-bottom: 0; }
+td:first-child { white-space: nowrap; }
+td.num, th.r { text-align: right; white-space: nowrap; }
+td.num:first-child { text-align: left; }
+td.num:last-child, th.r:last-child { padding-right: 0; }
+tr.on td { background: var(--voc-soft); }
+
+/* ---------- 타임라인 ---------- */
+#tl { display: block; width: 100%; overflow: visible; }
+#tl text { font-family: var(--mono); font-size: 12px; fill: var(--mute); }
+#tl .ln { font-family: var(--sans); font-size: 13px; font-weight: 600; }
+
+/* ---------- 현상 고르기 ---------- */
+.sym { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; }
+
+.sym label {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin: 0;
+  padding: 10px 12px;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.sym label:has(:checked) { border-color: var(--ink); background: var(--sunk); font-weight: 600; }
+.sym input { flex: none; margin: 5px 0 0; accent-color: var(--voc); }
+
+/* ---------- 작업 순서 ---------- */
+.steps { list-style: none; display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px; }
+
+.steps label {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  margin: 0;
+  padding: 10px 0;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--ink);
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+}
+
+.steps li:last-child label { border-bottom: 0; }
+.steps input { width: 20px; height: 20px; margin: 3px 0 0; accent-color: var(--inst); }
+.steps input:checked + span { color: var(--mute); text-decoration: line-through; }
+
+/* ---------- 폰 ---------- */
+@media (max-width: 480px) {
+  .panel { padding: 18px 16px; }
+  .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pos { font-size: 29px; }
+  table { font-size: 13px; }
+  th, td { padding-right: 7px; }
+}
