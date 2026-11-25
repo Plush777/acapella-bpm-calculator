@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="반주와 아카펠라의 BPM으로 보컬 길이 비율과 클립 위치를 계산합니다.">
+  <meta name="description" content="반주와 아카펠라의 BPM을 입력하면 아카펠라 길이를 얼마나 조절해야 하는지 계산합니다.">
   <title>아카펠라 박자 계산기</title>
 
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
@@ -19,93 +19,94 @@
 
     <header>
       <h1>아카펠라 박자 계산기</h1>
-      <p class="lede">반주와 아카펠라의 BPM을 넣으면 보컬을 몇 %로 늘리거나 줄일지, 클립을 어디에 놓을지 계산합니다. 길이 비율과 위치 표기는 Cakewalk Sonar 기준입니다.</p>
+      <p class="lede">반주와 아카펠라의 BPM을 입력하면 아카펠라 길이를 얼마나 조절해야 하는지 계산해 드립니다.</p>
     </header>
 
     <!-- main.js가 실행되면 사라진다. 파일을 더블클릭해 열었을 때만 보인다. -->
-    <p class="hint boot" id="boot">계산기를 불러오지 못했습니다. 파일을 직접 여는 대신 웹 호스팅이나 로컬 서버 주소로 열어 주세요.</p>
+    <p class="hint boot" id="boot">계산기를 불러오지 못했습니다. 파일을 직접 열지 말고 웹사이트 주소로 접속해 주세요.</p>
 
     <div class="duo top">
 
-      <!-- 템포 입력 -->
-      <section class="panel" aria-label="템포 입력">
+      <!-- BPM 입력 -->
+      <section class="panel" aria-label="BPM 입력">
         <div>
-          <label for="bi">반주 BPM <span>(기준 템포)</span></label>
+          <label for="bi">반주 BPM</label>
           <div class="bpm i">
             <input id="bi" type="number" inputmode="decimal" min="20" max="400" step="any" value="67">
-            <button type="button" id="tapi">두드려 재기</button>
+            <button type="button" id="tapi" aria-label="반주 BPM 측정">BPM 측정</button>
           </div>
         </div>
         <div>
-          <label for="bv">아카펠라 원곡 BPM</label>
+          <label for="bv">아카펠라 BPM</label>
           <div class="bpm v">
             <input id="bv" type="number" inputmode="decimal" min="20" max="400" step="any" value="73">
-            <button type="button" id="tapv">두드려 재기</button>
+            <button type="button" id="tapv" aria-label="아카펠라 BPM 측정">BPM 측정</button>
           </div>
         </div>
         <p class="err" id="err" role="alert" hidden></p>
-        <p class="note" id="tapnote">드럼이 있는 원곡을 들으며 박마다 버튼을 누르면 BPM이 채워집니다.</p>
+        <p class="note" id="tapnote" aria-live="polite">BPM을 모르면 음악을 들으면서 박자에 맞춰 BPM 측정 버튼을 눌러 주세요.</p>
         <fieldset>
-          <legend>박자표</legend>
+          <legend>박자</legend>
           <div class="seg" id="meter">
             <button type="button" data-v="4">4/4</button>
             <button type="button" data-v="3">3/4</button>
           </div>
         </fieldset>
         <fieldset>
-          <legend>아카펠라 BPM이 절반·두 배로 읽혔다면</legend>
-          <div class="seg" id="cand">
-            <button type="button" data-m="0.5" aria-pressed="false"></button>
-            <button type="button" data-m="1" aria-pressed="true"></button>
-            <button type="button" data-m="2" aria-pressed="false"></button>
+          <legend>아카펠라 BPM 변경</legend>
+          <div class="seg" id="scale">
+            <button type="button" data-m="0.5">절반으로</button>
+            <button type="button" data-m="2">2배로</button>
           </div>
         </fieldset>
       </section>
 
       <!-- 길이 비율 -->
-      <section class="panel" aria-label="길이 비율 결과" aria-live="polite">
+      <section class="panel" aria-label="아카펠라 길이 비율">
         <div class="head">
-          <div>
-            <h2>아카펠라 길이 비율</h2>
-            <p class="note">클립 선택 → <kbd>Shift</kbd>+<kbd>I</kbd> → AudioSnap → Stretch Amount (%)</p>
-          </div>
-          <button type="button" id="copyr">값 복사</button>
+          <h2>아카펠라 길이 비율</h2>
+          <button type="button" id="copy">복사</button>
         </div>
-        <div class="big"><span id="ratio"></span><small>%</small></div>
+        <div aria-live="polite">
+          <div class="big"><span id="ratio"></span><small>%</small></div>
+        </div>
         <p class="verdict" id="say"></p>
         <p class="hint" id="half" hidden></p>
         <dl class="facts">
           <div><dt>계산식</dt><dd id="fx"></dd></div>
           <div><dt>정확한 값</dt><dd id="exact"></dd></div>
-          <div><dt>재생 속도로는</dt><dd id="speed"></dd></div>
+          <div><dt>재생 속도</dt><dd id="speed"></dd></div>
         </dl>
-        <div>
-          <label for="olen">원본 클립 길이 → New Duration</label>
-          <div class="len">
+        <div class="len">
+          <div>
+            <label for="olen">원본 길이(초)</label>
             <input id="olen" type="text" inputmode="decimal" value="10">
-            <span aria-hidden="true">→</span>
-            <span class="num len-out" id="nlen"></span>
+          </div>
+          <div>
+            <p class="label">조절 후 길이</p>
+            <p class="len-out" id="nlen"></p>
           </div>
         </div>
-        <p class="note">아직 속도를 바꾸지 않은 원본 클립 기준입니다. 참고용 원곡에도 같은 비율을 적용하세요.</p>
+        <p class="note">Cakewalk에서는 아카펠라 클립을 선택하고 <kbd>Shift</kbd> <kbd>I</kbd> 키를 함께 누른 뒤, AudioSnap의 Stretch Amount에 이 값을 입력하세요. 속도를 바꾸지 않은 원본에 적용해야 합니다.</p>
+        <textarea id="copybox" rows="1" readonly hidden aria-label="복사할 값"></textarea>
       </section>
     </div>
 
-    <!-- 어긋남 확인 -->
-    <section class="panel" aria-label="어긋남 확인">
+    <!-- 박자 차이 -->
+    <section class="panel" aria-label="박자 차이 확인">
       <div class="head">
         <div>
-          <h2>끝까지 맞는지 확인</h2>
-          <p class="note">시작 박을 맞춘 뒤 마디선이 어디서 벌어지는지 보여줍니다. 클릭음은 왼쪽이 반주, 오른쪽이 보컬입니다.</p>
+          <h2>박자 차이 확인</h2>
+          <p class="note">첫 박을 맞췄을 때 뒤로 갈수록 박자가 얼마나 어긋나는지 보여 줍니다. 메트로놈 소리는 왼쪽이 반주, 오른쪽이 아카펠라입니다.</p>
         </div>
-        <button type="button" class="main" id="play">클릭음으로 들어보기</button>
+        <button type="button" class="main" id="play">메트로놈 재생</button>
       </div>
       <div class="duo even">
         <fieldset>
-          <legend>클릭음과 배치에 쓸 보컬 길이</legend>
+          <legend>재생할 아카펠라</legend>
           <div class="seg" id="mode">
-            <button type="button" data-v="fit">맞춤</button>
-            <button type="button" data-v="raw">100% 그대로</button>
+            <button type="button" data-v="fit">길이 조절 후</button>
+            <button type="button" data-v="raw">원본</button>
           </div>
         </fieldset>
         <fieldset>
@@ -118,140 +119,17 @@
           </div>
         </fieldset>
       </div>
-      <svg id="tl" role="img" aria-label="반주와 보컬 마디선 비교"></svg>
+      <svg id="tl" role="img" aria-label="반주와 아카펠라의 마디 위치 비교"></svg>
       <p class="verdict" id="drift"></p>
       <p class="note" id="drift2"></p>
       <div class="scroll">
         <table>
           <thead>
-            <tr><th>구간</th><th class="r">반주</th><th class="r">아카펠라 100%</th><th class="r">차이</th><th class="r">박으로</th></tr>
+            <tr><th>구간</th><th class="r">반주</th><th class="r">아카펠라 원본</th><th class="r">시간 차이</th><th class="r">박자 차이</th></tr>
           </thead>
           <tbody id="dt"></tbody>
         </table>
       </div>
-    </section>
-
-    <div class="duo even">
-
-      <!-- 클립 배치 -->
-      <section class="panel" aria-label="클립 배치">
-        <div>
-          <h2>클립 놓을 위치</h2>
-          <p class="note">원곡에서 박 위치가 분명한 단어 하나를 기준으로 잡습니다. 첫 음절이 아니어도 됩니다. 처음 들어 있는 8.00과 7.59는 예시입니다.</p>
-        </div>
-        <div class="fields">
-          <div>
-            <label for="anc">기준 단어 시간 (원본 파일)</label>
-            <input id="anc" type="text" inputmode="text" value="8.00">
-          </div>
-          <div>
-            <label for="fst">가사 첫 소리 시간 (선택)</label>
-            <input id="fst" type="text" inputmode="text" value="7.59">
-          </div>
-          <div>
-            <label for="tbar">기준 단어를 놓을 마디</label>
-            <input id="tbar" type="number" inputmode="numeric" min="1" step="1" value="9">
-          </div>
-          <div>
-            <label for="tbeat">박</label>
-            <select id="tbeat"></select>
-          </div>
-        </div>
-        <div>
-          <label for="toff">박에서 얼마나 비켜 있는지</label>
-          <select id="toff">
-            <option value="0">정박</option>
-            <option value="-1">한 박 먼저</option>
-            <option value="-0.5">반 박 먼저</option>
-            <option value="-0.25">¼박 먼저</option>
-            <option value="0.25">¼박 늦게</option>
-            <option value="0.5">반 박 늦게</option>
-          </select>
-        </div>
-        <p class="err" id="perr" role="alert" hidden></p>
-        <div class="out" id="pout" aria-live="polite"></div>
-        <div class="scroll">
-          <table>
-            <thead>
-              <tr><th>다시 확인할 곳</th><th class="r">위치</th><th class="r">원본 파일</th><th class="r">오차</th></tr>
-            </thead>
-            <tbody id="chk"></tbody>
-          </table>
-        </div>
-        <p class="note">시간은 12.5 또는 0:12.5처럼 적습니다. 반주의 첫 박이 1마디 시작선에 맞춰져 있고 템포가 일정하다고 가정합니다. 위치는 마디:박:틱이며 한 박은 960틱입니다.</p>
-      </section>
-
-      <!-- 스냅 간격 -->
-      <section class="panel" aria-label="스냅 간격">
-        <div>
-          <h2>Snap 간격</h2>
-          <p class="note" id="snapn"></p>
-        </div>
-        <div class="scroll">
-          <table>
-            <thead>
-              <tr><th>설정</th><th class="r">시간</th><th class="r">틱</th><th>쓰는 때</th></tr>
-            </thead>
-            <tbody id="snap"></tbody>
-          </table>
-        </div>
-        <p class="note">Smart Grid가 켜져 있으면 확대·축소할 때 간격이 바뀝니다. 체크를 해제하고 1/8을 고르세요. <kbd>N</kbd> 키로 Snap을 켜고 끕니다.</p>
-        <p class="note">스트레칭 음질은 단일 보컬이면 Radius Solo (Vocal), 화음이 겹쳤으면 Radius Mix를 비교해 보세요.</p>
-      </section>
-    </div>
-
-    <!-- 어긋남 진단 -->
-    <section class="panel" aria-label="어긋남 진단">
-      <div>
-        <h2>어긋나게 들릴 때</h2>
-        <p class="note">가장 비슷한 현상을 고르면 고칠 값을 계산합니다.</p>
-      </div>
-      <div class="duo even">
-        <div class="sym" id="sym" role="radiogroup" aria-label="들리는 현상"></div>
-        <div class="out" id="fix">
-          <h3 id="fixh"></h3>
-          <p id="fixp"></p>
-          <div id="fixf" class="fields">
-            <div id="fdirw">
-              <label for="fdir">보컬이</label>
-              <select id="fdir">
-                <option value="late">늦음</option>
-                <option value="early">빠름</option>
-              </select>
-            </div>
-            <div id="fbarw">
-              <label for="fbar">몇 마디 뒤에</label>
-              <input id="fbar" type="number" inputmode="numeric" min="1" step="1" value="8">
-            </div>
-            <div id="fratw">
-              <label for="frat">지금 적용한 비율 (%)</label>
-              <input id="frat" type="number" inputmode="decimal" step="any">
-            </div>
-            <div>
-              <label for="fms">어긋난 정도 (ms)</label>
-              <input id="fms" type="number" inputmode="decimal" min="0" step="any" value="120">
-            </div>
-          </div>
-          <p class="pos" id="fixv" aria-live="polite"></p>
-          <p class="note" id="fixn"></p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 작업 순서 -->
-    <section class="panel" aria-label="작업 순서">
-      <div class="head">
-        <div>
-          <h2>이번 작업 순서</h2>
-          <p class="note">위에서 계산한 값이 들어 있습니다. 체크는 이 브라우저에만 남습니다.</p>
-        </div>
-        <div class="row">
-          <button type="button" id="reset">체크 지우기</button>
-          <button type="button" id="copym">작업 메모 복사</button>
-        </div>
-      </div>
-      <ol class="steps" id="steps"></ol>
-      <textarea id="memo" readonly hidden aria-label="작업 메모"></textarea>
     </section>
 
   </div>

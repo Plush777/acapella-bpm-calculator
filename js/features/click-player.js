@@ -1,4 +1,4 @@
-// 반주(왼쪽)와 보컬(오른쪽) 박을 클릭음으로 들려준다.
+// 반주(왼쪽)와 아카펠라(오른쪽) 박을 메트로놈 소리로 들려준다.
 
 import { secondsPerBeat, spanSeconds } from '../core/calc.js';
 
@@ -7,7 +7,7 @@ const LEAD_IN = 0.15;
 const INST = { downbeat: 520, beat: 390, gain: 0.5, pan: -0.5 };
 const VOCAL = { downbeat: 1480, beat: 1110, gain: 0.28, pan: 0.5 };
 
-/** 두 트랙의 클릭 시각 목록 (순수 함수) */
+/** 두 트랙에서 소리를 낼 시각 목록 (순수 함수) */
 export const clickSchedule = ({ instBpm, vocalBpm, ratio, bars, beatsPerBar }) =>
   Array.from({ length: bars * beatsPerBar }, (_, i) => {
     const tone = (voice) => (i % beatsPerBar === 0 ? voice.downbeat : voice.beat);

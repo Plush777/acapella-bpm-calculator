@@ -1,4 +1,4 @@
-// 글을 복사한다. 브라우저가 막으면 글상자를 펼쳐 직접 복사하게 한다.
+// 값을 복사한다. 브라우저가 막으면 글상자를 펼쳐 직접 복사하게 한다.
 
 const RESTORE_MS = 1800;
 
@@ -29,7 +29,7 @@ export const attachCopy = (button, fallbackBox, getText) => {
   button.addEventListener('click', async () => {
     const copied = await copyText(getText(), fallbackBox);
     if (copied) fallbackBox.hidden = true;
-    button.textContent = copied ? '복사했습니다' : '아래 글을 복사하세요';
+    button.textContent = copied ? '복사 완료' : '직접 복사해 주세요';
     setTimeout(() => { button.textContent = label; }, RESTORE_MS);
   });
 };

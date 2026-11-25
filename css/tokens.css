@@ -1,4 +1,4 @@
-/* 색과 글꼴 변수. 청록(inst)은 반주, 라즈베리(voc)는 보컬을 뜻한다. */
+/* 색과 글꼴 변수. 청록(inst)은 반주, 라즈베리(voc)는 아카펠라를 뜻한다. */
 :root {
   --bg: #EBF0F0;
   --panel: #FAFCFC;
@@ -13,8 +13,7 @@
   --warn: #7D5000;
   --warn-soft: #F4E6C6;
 
-  --sans: "IBM Plex Sans KR", "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-  --mono: "IBM Plex Mono", "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", monospace;
+  --font: "Pretendard Variable", Pretendard, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {

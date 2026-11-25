@@ -1,17 +1,17 @@
-// 세 레인 타임라인 (보컬 100% / 반주 / 보컬 맞춤)
+// 세 줄 타임라인 (아카펠라 원본, 반주, 길이를 조절한 아카펠라)
 
 import { secondsPerBeat } from '../core/calc.js';
-import { fixed2, isNegligible, percent2, trimNumber } from '../core/format.js';
+import { fastSlow, isNegligible, percent2, trimNumber } from '../core/format.js';
 import { driftAt, fitRatio } from '../core/selectors.js';
 import { byId, each, setHTML } from './dom.js';
 
 const LANE = 32;
-const GAP = 30;
+const GAP = 32;
 const TOP = 26;
 const MIN_WIDTH = 260;
 
 const Y = { raw: TOP, inst: TOP + LANE + GAP, fit: TOP + (LANE + GAP) * 2 };
-const HEIGHT = Y.fit + LANE + 24;
+const HEIGHT = Y.fit + LANE + 26;
 
 /** 화면 폭에 맞춘 축과 간격 */
 const geometry = (state, width) => {
@@ -27,7 +27,6 @@ const geometry = (state, width) => {
     drift, left, right, x,
     showBeats: beatWidth >= 5,
     labelStep: [1, 2, 4, 8].find((step) => barWidth * step >= 26) ?? 8,
-    isWide: width >= 420,
   };
 };
 
@@ -37,11 +36,9 @@ const line = ({ x1, x2 = x1, y1, y2, color, width = 1, opacity = 1 }) =>
 const lane = (x, y, duration, color) =>
   `<rect x="${x(0)}" y="${y}" width="${x(duration) - x(0)}" height="${LANE}" fill="var(--${color}-soft)"/>`;
 
-const label = ({ x, y, color, text, anchor = 'start' }) =>
-  `<text class="ln" x="${x}" y="${y}" text-anchor="${anchor}" style="fill:var(--${color})">${text}</text>`;
-
-const barNumber = (x, number) =>
-  `<text x="${x + 4}" y="${Y.inst + LANE - 5}" style="fill:var(--inst);font-weight:600;paint-order:stroke;stroke:var(--inst-soft);stroke-width:4px">${number}</text>`;
+/** halo는 글자 뒤의 선을 가리는 테두리 색 */
+const label = ({ x, y, color, text, anchor = 'start', halo = 'panel' }) =>
+  `<text x="${x}" y="${y}" text-anchor="${anchor}" style="fill:var(--${color});paint-order:stroke;stroke:var(--${halo});stroke-width:5px">${text}</text>`;
 
 const beatMark = ({ bpm, beatsPerBar, bars }, { x, showBeats, labelStep }) => (beat) => {
   const isBar = beat % beatsPerBar === 0;
@@ -62,33 +59,33 @@ const beatMark = ({ bpm, beatsPerBar, bars }, { x, showBeats, labelStep }) => (b
     line({ x1: rawX, x2: instX, y1: Y.raw + LANE + 2, y2: Y.inst - 2, color: 'mute' }),
     line({ x1: instX, y1: Y.inst + LANE + 2, y2: Y.fit - 2, color: 'mute', opacity: 0.5 }),
   ] : [];
-  const number = isBar && bar < bars && bar % labelStep === 0 ? [barNumber(instX, bar + 1)] : [];
+  const number = isBar && bar < bars && bar % labelStep === 0
+    ? [label({ x: instX + 4, y: Y.inst + LANE - 6, color: 'inst', text: bar + 1, halo: 'inst-soft' })]
+    : [];
 
   return [...ticks, ...links, ...number].join('');
 };
 
 const driftGap = ({ drift, right, x }) => {
   if (isNegligible(drift.sec)) return '';
-  const isEarly = drift.sec > 0;
   const from = x(Math.min(drift.inst, drift.vocal));
   const to = x(Math.max(drift.inst, drift.vocal));
-  return `
-    <rect x="${from}" y="${isEarly ? Y.raw : Y.inst}" width="${to - from}" height="${LANE}" fill="none" stroke="var(--mute)" stroke-dasharray="3 3"/>
-    <text x="${right}" y="${Y.raw - 8}" text-anchor="end" style="fill:var(--ink);font-weight:600">${fixed2(Math.abs(drift.sec))}초 ${isEarly ? '먼저' : '늦게'} 끝남</text>`;
+  return `<rect x="${from}" y="${drift.sec > 0 ? Y.raw : Y.inst}" width="${to - from}" height="${LANE}" fill="none" stroke="var(--mute)" stroke-dasharray="3 3"/>`
+    + label({ x: right, y: Y.raw - 8, color: 'ink', anchor: 'end', text: fastSlow(drift.sec) });
 };
 
 const timelineSVG = (state, view) => {
-  const { drift, left, right, x, isWide } = view;
+  const { drift, left, x } = view;
   const beats = Array.from({ length: state.bars * state.beatsPerBar + 1 }, (_, i) => i);
 
   return [
     lane(x, Y.raw, drift.vocal, 'voc'),
     lane(x, Y.inst, drift.inst, 'inst'),
     lane(x, Y.fit, drift.inst, 'voc'),
-    label({ x: left, y: Y.raw - 8, color: 'voc', text: '보컬 100%' }),
-    label({ x: left, y: HEIGHT - 5, color: 'voc', text: `보컬 ${percent2(fitRatio(state))}%` }),
     each(beats, beatMark(state, view)),
-    label({ x: right, y: HEIGHT - 5, color: 'inst', anchor: 'end', text: `${isWide ? '가운데 레인: ' : ''}반주 ${trimNumber(state.bpm.bi)} BPM` }),
+    label({ x: left, y: Y.raw - 8, color: 'voc', text: '아카펠라 원본' }),
+    label({ x: left, y: Y.inst + LANE + 19, color: 'inst', text: `반주 ${trimNumber(state.bpm.bi)} BPM` }),
+    label({ x: left, y: Y.fit + LANE + 19, color: 'voc', text: `아카펠라 ${percent2(fitRatio(state))}%` }),
     driftGap(view),
     `<line id="ph" x1="0" x2="0" y1="${Y.raw - 3}" y2="${Y.fit + LANE + 3}" stroke="var(--ink)" stroke-width="2" visibility="hidden"/>`,
   ].join('');

@@ -7,12 +7,13 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
-  font: 400 16px/1.6 var(--sans);
+  font: 400 16px/1.6 var(--font);
+  font-variant-numeric: tabular-nums;
   word-break: keep-all;
   overflow-wrap: anywhere;
 }
 
-h1, h2, h3, p, ol, ul, dl, dd, fieldset { margin: 0; padding: 0; }
+h1, h2, p, dl, dd, fieldset { margin: 0; padding: 0; }
 
 h1 {
   font-size: 28px;
@@ -29,19 +30,13 @@ h2 {
   line-height: 1.35;
 }
 
-h3 { font-size: 16px; font-weight: 600; }
-
-b, strong { font-weight: 600; }
-
 kbd {
-  font: 500 .88em var(--mono);
+  font: 500 .88em var(--font);
   border: 1px solid var(--line);
   border-radius: 3px;
   padding: 1px 5px;
   background: var(--bg);
 }
-
-.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
 
 .lede { color: var(--mute); max-width: 62ch; margin-top: 6px; }
 
