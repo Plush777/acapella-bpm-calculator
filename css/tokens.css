@@ -1,35 +1,162 @@
-/* 색과 글꼴 변수. 청록(inst)은 반주, 라즈베리(voc)는 아카펠라를 뜻한다. */
+/* KRDS(krds-uiux 1.1.0)의 색상, 글자 크기, 둥글기 값을 참고한 변수 */
 :root {
-  --bg: #EBF0F0;
-  --panel: #FAFCFC;
-  --sunk: #E0E8E8;
-  --ink: #14211F;
-  --mute: #52635F;
-  --line: #C6D3D1;
-  --inst: #17646D;
-  --inst-soft: #CDE3E4;
-  --voc: #AD2C5B;
-  --voc-soft: #F3D7E1;
-  --warn: #7D5000;
-  --warn-soft: #F4E6C6;
+  /* ---------- KRDS 기본 색상 ---------- */
+  --primary-5: #ecf2fe;
+  --primary-10: #d8e5fd;
+  --primary-20: #b1cefb;
+  --primary-30: #86aff9;
+  --primary-50: #256ef4;
+  --primary-60: #0b50d0;
+  --primary-70: #083891;
+  --primary-80: #052561;
+  --primary-95: #020f27;
 
+  --secondary-5: #eef2f7;
+  --secondary-10: #d6e0eb;
+  --secondary-20: #bacbde;
+  --secondary-70: #063a74;
+  --secondary-80: #052b57;
+  --secondary-95: #02162c;
+
+  --gray-0: #ffffff;
+  --gray-5: #f4f5f6;
+  --gray-10: #e6e8ea;
+  --gray-20: #cdd1d5;
+  --gray-30: #b1b8be;
+  --gray-40: #8a949e;
+  --gray-50: #6d7882;
+  --gray-60: #58616a;
+  --gray-70: #464c53;
+  --gray-80: #33363d;
+  --gray-90: #1e2124;
+  --gray-95: #131416;
+
+  --point-10: #f5d6d9;
+  --point-20: #ebadb2;
+  --point-30: #e0858c;
+  --point-60: #ab2b36;
+  --point-80: #521419;
+
+  --danger-20: #f7afa1;
+  --danger-50: #de3412;
+  --danger-60: #bd2c0f;
+
+  --warning-5: #fff3db;
+  --warning-10: #ffe0a3;
+  --warning-20: #ffc95c;
+  --warning-60: #8a5c00;
+  --warning-80: #422c00;
+  --warning-95: #241800;
+
+  /* ---------- 쓰임새별 색상 (밝은 화면) ---------- */
+  --bg: var(--gray-0);
+  --panel: var(--gray-0);
+  --subtle: var(--gray-5);
+  --intro: var(--secondary-5);
+
+  --ink: var(--gray-90);
+  --mute: var(--gray-70);
+  --strong: var(--primary-60);
+  --error: var(--danger-60);
+  --error-line: var(--danger-50);
+
+  --border: var(--gray-30);
+  --divider: var(--gray-20);
+
+  --input: var(--gray-0);
+  --input-line: var(--gray-60);
+
+  --btn-hover: var(--gray-5);
+  --btn-line: var(--gray-60);
+  --sub: var(--primary-5);
+  --sub-hover: var(--primary-10);
+  --sub-text: var(--primary-60);
+  --tab-on: var(--secondary-70);
+  --tab-hover: var(--secondary-5);
+  --off: var(--gray-20);
+  --off-text: var(--gray-50);
+
+  --thead: var(--secondary-5);
+  --thead-line: var(--secondary-10);
+  --row-on: var(--primary-5);
+
+  --warn: var(--warning-60);
+  --warn-bg: var(--warning-5);
+  --warn-line: var(--warning-10);
+
+  /* 반주는 파랑, 아카펠라는 빨강 */
+  --inst: var(--primary-60);
+  --inst-soft: var(--primary-10);
+  --voc: var(--point-60);
+  --voc-soft: var(--point-10);
+
+  /* ---------- 글자 ---------- */
   --font: "Pretendard Variable", Pretendard, sans-serif;
+  --size-display: 60px;
+  --size-h1: 40px;
+  --size-h2: 24px;
+  --size-h3: 19px;
+  --size-body: 17px;
+  --size-small: 15px;
+  --size-xsmall: 13px;
+
+  /* ---------- 둥글기 ---------- */
+  --radius-small: 4px;
+  --radius-medium: 6px;
+  --radius-large: 10px;
+  --radius-xlarge: 12px;
 }
 
+@media (max-width: 600px) {
+  :root {
+    --size-display: 44px;
+    --size-h1: 28px;
+    --size-h2: 22px;
+  }
+}
+
+/* KRDS 선명한 화면 모드를 참고한 어두운 화면 */
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0E1516;
-    --panel: #162021;
-    --sunk: #1E2B2C;
-    --ink: #E3ECEA;
-    --mute: #95A8A5;
-    --line: #2E3D3E;
-    --inst: #63C4CD;
-    --inst-soft: #1D3E42;
-    --voc: #F28BAE;
-    --voc-soft: #472534;
-    --warn: #E8B95F;
-    --warn-soft: #3A2F16;
+    --bg: var(--gray-95);
+    --panel: var(--gray-95);
+    --subtle: var(--gray-90);
+    --intro: var(--secondary-95);
+
+    --ink: var(--gray-5);
+    --mute: var(--gray-20);
+    --strong: var(--primary-20);
+    --error: var(--danger-20);
+
+    --border: var(--gray-70);
+    --divider: var(--gray-80);
+
+    --input: var(--gray-90);
+    --input-line: var(--gray-40);
+
+    --btn-hover: var(--gray-80);
+    --btn-line: var(--gray-40);
+    --sub: var(--primary-95);
+    --sub-hover: var(--primary-80);
+    --sub-text: var(--primary-20);
+    --tab-on: var(--primary-50);
+    --tab-hover: var(--gray-80);
+    --off: var(--gray-80);
+    --off-text: var(--gray-40);
+
+    --thead: var(--secondary-95);
+    --thead-line: var(--secondary-80);
+    --row-on: var(--primary-80);
+
+    --warn: var(--warning-20);
+    --warn-bg: var(--warning-95);
+    --warn-line: var(--warning-80);
+
+    --inst: var(--primary-30);
+    --inst-soft: var(--primary-80);
+    --voc: var(--point-30);
+    --voc-soft: var(--point-80);
+
     color-scheme: dark;
   }
 }

@@ -6,12 +6,12 @@ import { driftAt, fitRatio } from '../core/selectors.js';
 import { byId, each, setHTML } from './dom.js';
 
 const LANE = 32;
-const GAP = 32;
-const TOP = 26;
+const GAP = 36;
+const TOP = 28;
 const MIN_WIDTH = 260;
 
 const Y = { raw: TOP, inst: TOP + LANE + GAP, fit: TOP + (LANE + GAP) * 2 };
-const HEIGHT = Y.fit + LANE + 26;
+const HEIGHT = Y.fit + LANE + 28;
 
 /** 화면 폭에 맞춘 축과 간격 */
 const geometry = (state, width) => {
@@ -37,8 +37,8 @@ const lane = (x, y, duration, color) =>
   `<rect x="${x(0)}" y="${y}" width="${x(duration) - x(0)}" height="${LANE}" fill="var(--${color}-soft)"/>`;
 
 /** halo는 글자 뒤의 선을 가리는 테두리 색 */
-const label = ({ x, y, color, text, anchor = 'start', halo = 'panel' }) =>
-  `<text x="${x}" y="${y}" text-anchor="${anchor}" style="fill:var(--${color});paint-order:stroke;stroke:var(--${halo});stroke-width:5px">${text}</text>`;
+const label = ({ x, y, color, text, anchor = 'start', halo = 'panel', className = '' }) =>
+  `<text class="${className}" x="${x}" y="${y}" text-anchor="${anchor}" style="fill:var(--${color});paint-order:stroke;stroke:var(--${halo});stroke-width:5px">${text}</text>`;
 
 const beatMark = ({ bpm, beatsPerBar, bars }, { x, showBeats, labelStep }) => (beat) => {
   const isBar = beat % beatsPerBar === 0;
@@ -60,7 +60,7 @@ const beatMark = ({ bpm, beatsPerBar, bars }, { x, showBeats, labelStep }) => (b
     line({ x1: instX, y1: Y.inst + LANE + 2, y2: Y.fit - 2, color: 'mute', opacity: 0.5 }),
   ] : [];
   const number = isBar && bar < bars && bar % labelStep === 0
-    ? [label({ x: instX + 4, y: Y.inst + LANE - 6, color: 'inst', text: bar + 1, halo: 'inst-soft' })]
+    ? [label({ x: instX + 4, y: Y.inst + LANE - 6, color: 'inst', text: bar + 1, halo: 'inst-soft', className: 'bar-no' })]
     : [];
 
   return [...ticks, ...links, ...number].join('');
@@ -84,8 +84,8 @@ const timelineSVG = (state, view) => {
     lane(x, Y.fit, drift.inst, 'voc'),
     each(beats, beatMark(state, view)),
     label({ x: left, y: Y.raw - 8, color: 'voc', text: '아카펠라 원본' }),
-    label({ x: left, y: Y.inst + LANE + 19, color: 'inst', text: `반주 ${trimNumber(state.bpm.bi)} BPM` }),
-    label({ x: left, y: Y.fit + LANE + 19, color: 'voc', text: `아카펠라 ${percent2(fitRatio(state))}%` }),
+    label({ x: left, y: Y.inst + LANE + 22, color: 'inst', text: `반주 ${trimNumber(state.bpm.bi)} BPM` }),
+    label({ x: left, y: Y.fit + LANE + 21, color: 'voc', text: `아카펠라 ${percent2(fitRatio(state))}%` }),
     driftGap(view),
     `<line id="ph" x1="0" x2="0" y1="${Y.raw - 3}" y2="${Y.fit + LANE + 3}" stroke="var(--ink)" stroke-width="2" visibility="hidden"/>`,
   ].join('');

@@ -30,17 +30,17 @@
       <!-- BPM 입력 -->
       <section class="panel" aria-label="BPM 입력">
         <div>
-          <label for="bi">반주 BPM</label>
-          <div class="bpm i">
+          <label class="mark inst" for="bi">반주 BPM</label>
+          <div class="bpm">
             <input id="bi" type="number" inputmode="decimal" min="20" max="400" step="any" value="67">
-            <button type="button" id="tapi" aria-label="반주 BPM 측정">BPM 측정</button>
+            <button type="button" class="sub" id="tapi" aria-label="반주 BPM 측정">BPM 측정</button>
           </div>
         </div>
         <div>
-          <label for="bv">아카펠라 BPM</label>
-          <div class="bpm v">
+          <label class="mark voc" for="bv">아카펠라 BPM</label>
+          <div class="bpm">
             <input id="bv" type="number" inputmode="decimal" min="20" max="400" step="any" value="73">
-            <button type="button" id="tapv" aria-label="아카펠라 BPM 측정">BPM 측정</button>
+            <button type="button" class="sub" id="tapv" aria-label="아카펠라 BPM 측정">BPM 측정</button>
           </div>
         </div>
         <p class="err" id="err" role="alert" hidden></p>
@@ -94,14 +94,33 @@
 
     <!-- 박자 차이 -->
     <section class="panel" aria-label="박자 차이 확인">
-      <div class="head">
-        <div>
-          <h2>박자 차이 확인</h2>
-          <p class="note">첫 박을 맞췄을 때 뒤로 갈수록 박자가 얼마나 어긋나는지 보여 줍니다. 메트로놈 소리는 왼쪽이 반주, 오른쪽이 아카펠라입니다.</p>
-        </div>
-        <button type="button" class="main" id="play">메트로놈 재생</button>
+      <div>
+        <h2>박자 차이 확인</h2>
+        <p class="note">첫 박을 맞췄을 때 뒤로 갈수록 박자가 얼마나 어긋나는지 보여 줍니다.</p>
       </div>
-      <div class="duo even">
+      <fieldset>
+        <legend>확인할 구간</legend>
+        <div class="seg" id="bars">
+          <button type="button" data-v="4">4마디</button>
+          <button type="button" data-v="8">8마디</button>
+          <button type="button" data-v="16">16마디</button>
+          <button type="button" data-v="32">32마디</button>
+        </div>
+      </fieldset>
+      <svg id="tl" role="img" aria-label="반주와 아카펠라의 마디 위치 비교"></svg>
+      <div>
+        <p class="verdict" id="drift"></p>
+        <p class="note" id="drift2"></p>
+      </div>
+
+      <div class="box">
+        <div class="head">
+          <div>
+            <h3>메트로놈으로 듣기</h3>
+            <p class="note">박자 차이를 소리로 들려줍니다. 왼쪽이 반주, 오른쪽이 아카펠라입니다.</p>
+          </div>
+          <button type="button" class="main" id="play">메트로놈 재생</button>
+        </div>
         <fieldset>
           <legend>재생할 아카펠라</legend>
           <div class="seg" id="mode">
@@ -109,19 +128,8 @@
             <button type="button" data-v="raw">원본</button>
           </div>
         </fieldset>
-        <fieldset>
-          <legend>확인할 구간</legend>
-          <div class="seg" id="bars">
-            <button type="button" data-v="4">4마디</button>
-            <button type="button" data-v="8">8마디</button>
-            <button type="button" data-v="16">16마디</button>
-            <button type="button" data-v="32">32마디</button>
-          </div>
-        </fieldset>
       </div>
-      <svg id="tl" role="img" aria-label="반주와 아카펠라의 마디 위치 비교"></svg>
-      <p class="verdict" id="drift"></p>
-      <p class="note" id="drift2"></p>
+
       <div class="scroll">
         <table>
           <thead>
