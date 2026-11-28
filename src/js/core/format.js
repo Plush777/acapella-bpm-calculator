@@ -18,8 +18,8 @@ export const duration = (sec) => {
   return minutes ? `${minutes}분 ${seconds}초` : `${seconds}초`;
 };
 
-/** 차이를 '2.36초 빠름'처럼 쓴다. earlySec가 양수면 빠른 것이다. */
+/** 차이를 '2.36초 먼저'처럼 쓴다. earlySec가 양수면 아카펠라가 먼저 나온다. */
 export const fastSlow = (earlySec) =>
   (isNegligible(earlySec)
     ? '0.00초'
-    : `${fixed2(Math.abs(earlySec))}초 ${earlySec > 0 ? '빠름' : '느림'}`);
+    : `${fixed2(Math.abs(earlySec))}초 ${earlySec > 0 ? '먼저' : '늦게'}`);

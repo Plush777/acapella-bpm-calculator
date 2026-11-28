@@ -6,8 +6,8 @@ import { dehydrate, hydrate, reducer } from './core/state.js';
 import { createStore } from './core/store.js';
 import { createClickPlayer } from './features/click-player.js';
 import { attachCopy } from './features/clipboard.js';
+import { attachSheet } from './features/sheet.js';
 import { load, save } from './features/storage.js';
-import { attachTapTempo } from './features/tap-tempo.js';
 import { byId, on, onButton, setHidden, setText } from './views/dom.js';
 import { renderDrift } from './views/drift.js';
 import { renderPlayButton } from './views/player.js';
@@ -58,16 +58,36 @@ const bindInputs = () => {
 };
 
 const bindFeatures = () => {
-  [['tapi', 'bi'], ['tapv', 'bv']].forEach(([button, id]) =>
-    attachTapTempo(byId(button), {
-      onMessage: (message) => setText('tapnote', message),
-      onBpm: (bpm) => dispatch({ type: 'field', id, value: String(bpm) }),
-    }));
+  attachSheet(byId('sheet'), {
+    opener: byId('settings'),
+    closers: [byId('sheet-close'), byId('sheet-done')],
+    content: byId('options'),
+    wideSlot: byId('options-home'),
+    narrowSlot: byId('sheet-body'),
+  });
 
   attachCopy(byId('copy'), byId('copybox'), () => percent2(fitRatio(getState())));
 
   new ResizeObserver(() => renderTimeline(getState())).observe(byId('tl'));
 };
+
+/* ---------- 화면 보이기 ---------- */
+
+const wait = (ms) => new Promise((resolve) => { setTimeout(resolve, ms); });
+
+/** 화면에 쓰인 글자의 글꼴을 미리 받아 둔다. 글꼴이 바뀌면서 화면이 흔들리지 않게 하려는 것이다. */
+const loadFonts = () => {
+  if (!document.fonts) return Promise.resolve();
+  const text = document.body.textContent;
+  return Promise.all(['400', '700'].map((weight) =>
+    document.fonts.load(`${weight} 16px "Pretendard Variable"`, text))).catch(() => {});
+};
+
+/** 내용과 글꼴이 모두 준비된 다음 한 번에 보여 준다. 늦어도 1.5초 뒤에는 보여 준다. */
+const revealWhenReady = () =>
+  Promise.race([loadFonts(), wait(1500)]).then(() => {
+    document.documentElement.classList.remove('loading');
+  });
 
 /* ---------- 시작 ---------- */
 
@@ -81,3 +101,4 @@ bindInputs();
 bindFeatures();
 render(getState());
 byId('boot').remove();
+revealWhenReady();

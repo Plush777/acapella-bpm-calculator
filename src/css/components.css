@@ -39,10 +39,17 @@ h2 .icon { width: 28px; height: 28px; color: var(--strong); }
   border-radius: var(--radius-large);
 }
 
-/* 정상 로딩 중에는 깜빡이지 않도록 잠시 뒤에만 나타난다 */
-.boot { visibility: hidden; animation: boot-show 1ms 1.5s forwards; }
-
-@keyframes boot-show { to { visibility: visible; } }
+/* 화면 위에 떠 있어서 사라져도 다른 내용이 움직이지 않는다. 불러오지 못했을 때만 2초 뒤에 보인다. */
+.boot {
+  position: fixed;
+  z-index: 10;
+  top: 16px;
+  left: 50%;
+  width: min(560px, calc(100% - 32px));
+  transform: translateX(-50%);
+  visibility: hidden;
+  animation: reveal 1ms 2s forwards;
+}
 
 /* ---------- 입력 ---------- */
 fieldset { min-width: 0; border: 0; }
@@ -92,13 +99,7 @@ input:focus, textarea:focus {
 
 input[aria-invalid=true] { border-color: var(--error-line); }
 
-.bpm { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
-
-.bpm input[type=number], .bpm button { height: 64px; border-radius: var(--radius-large); }
-
-.bpm input[type=number] { font-size: var(--size-h2); font-weight: 700; }
-
-#tapnote:empty { display: none; }
+input.bpm { height: 64px; font-size: var(--size-h2); font-weight: 700; border-radius: var(--radius-large); }
 
 /* ---------- 버튼 ---------- */
 button {
@@ -119,6 +120,26 @@ button {
 }
 
 button:hover { background: var(--btn-hover); }
+
+.icon-btn { width: 48px; padding: 0; border-color: transparent; }
+
+/* 설정 버튼은 좁은 화면에서만 보인다 */
+.settings-btn { display: none; border-color: var(--btn-line); }
+
+@media (max-width: 899px) {
+  .settings-btn { display: inline-flex; }
+  .options-home:empty { display: none; }
+}
+
+/* 화면에는 보이지 않고 화면 낭독기에만 읽힌다 */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
 
 button.main { color: var(--gray-0); background: var(--primary-50); border-color: var(--primary-50); }
 button.main:hover { background: var(--primary-60); }
@@ -149,8 +170,18 @@ button:disabled, button:disabled:hover {
 
 .seg button:disabled, .seg button:disabled:hover { color: var(--off-text); background: var(--off); }
 
-/* ---------- 메트로놈 ---------- */
-.player { background: var(--player); border: 2px solid var(--primary-50); }
+/* ---------- 박자 비교 (메트로놈과 그래프를 한 상자에) ---------- */
+.player {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  padding: 24px;
+  background: var(--player);
+  border: 2px solid var(--primary-50);
+  border-radius: var(--radius-large);
+}
+
+#tl { padding-top: 20px; border-top: 1px solid var(--thead-line); box-sizing: content-box; }
 
 #play {
   min-height: 80px;
@@ -166,6 +197,7 @@ button:disabled, button:disabled:hover {
 
 /* ---------- 결과 숫자 ---------- */
 .big {
+  position: relative;
   font-size: var(--size-display);
   font-weight: 700;
   line-height: 1.2;
@@ -211,9 +243,27 @@ td.r, th.r { text-align: right; }
 tr.on td { color: var(--ink); font-weight: 700; background: var(--row-on); }
 
 /* ---------- 타임라인 ---------- */
-#tl { display: block; width: 100%; overflow: visible; }
+#tl { display: block; width: 100%; height: 224px; overflow: visible; }
+#tl text { paint-order: stroke; }
 #tl text { font-family: var(--font); font-size: 15px; font-weight: 700; fill: var(--mute); }
 #tl .bar-no { font-size: 13px; }
+
+/* ---------- 설정 창 (폰에서는 아래에서 올라온다) ---------- */
+.sheet {
+  width: min(480px, calc(100% - 32px));
+  padding: 24px;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xlarge);
+  box-shadow: 0 8px 32px rgb(0 0 0 / 25%);
+}
+
+.sheet[open] { display: grid; gap: 24px; }
+
+.sheet #options { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+
+.sheet::backdrop { background: rgb(0 0 0 / 50%); }
 
 /* ---------- 사용 안내 ---------- */
 .guide {
@@ -248,15 +298,32 @@ tr.on td { color: var(--ink); font-weight: 700; background: var(--row-on); }
 
 /* ---------- 폰 ---------- */
 @media (max-width: 600px) {
+  .sheet {
+    width: 100%;
+    max-width: 100%;
+    margin: auto 0 0;
+    padding: 24px 16px calc(24px + env(safe-area-inset-bottom, 0px));
+    border-width: 1px 0 0;
+    border-radius: var(--radius-xlarge) var(--radius-xlarge) 0 0;
+  }
+
+  .sheet[open] { animation: sheet-up .2s ease-out; }
+
   .logo { width: 44px; height: 44px; border-radius: var(--radius-large); }
   .logo .icon { width: 28px; height: 28px; }
   .panel, .guide { padding: 20px 16px; }
+  .player { padding: 16px; }
   .facts { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
   .facts dt { font-size: var(--size-xsmall); }
   .facts dd { font-size: var(--size-small); white-space: nowrap; letter-spacing: -.02em; }
   .seg button { padding-inline: 8px; }
-  .bpm button { padding-inline: 12px; }
   #play { min-height: 72px; }
   table, thead th { font-size: var(--size-xsmall); }
   th, td { padding-inline: 3px; letter-spacing: -.02em; }
+}
+
+@keyframes sheet-up { from { transform: translateY(100%); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet[open] { animation: none; }
 }

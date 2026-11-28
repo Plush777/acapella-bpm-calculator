@@ -9,8 +9,8 @@ const TABLE_BARS = [1, 2, 4, 8, 16, 32];
 
 const headline = (state, { sec, beats }) =>
   (isNegligible(sec)
-    ? `원본을 그대로 써도 ${state.bars}마디 끝까지 박자가 맞습니다.`
-    : `원본을 그대로 쓰면 ${state.bars}마디 뒤에 아카펠라가 ${fixed2(Math.abs(sec))}초(${fixed2(Math.abs(beats))}박) ${sec > 0 ? '앞서갑니다' : '늦어집니다'}. 길이를 ${percent2(fitRatio(state))}%로 조절하면 끝까지 맞습니다.`);
+    ? `원본 그대로 써도 ${state.bars}마디 끝까지 박자가 맞습니다.`
+    : `원본 그대로 쓰면 ${state.bars}마디 뒤에 아카펠라가 반주보다 ${fixed2(Math.abs(sec))}초 ${sec > 0 ? '먼저' : '늦게'} 나옵니다.`);
 
 const timeToDrift = ({ bpm, beatsPerBar }) => (amount) => {
   const beats = beatsUntilDrift({ instBpm: bpm.bi, vocalBpm: bpm.bv, ratio: 1, amount });
@@ -19,10 +19,10 @@ const timeToDrift = ({ bpm, beatsPerBar }) => (amount) => {
     : `${(beats / beatsPerBar).toFixed(1)}마디`;
 };
 
-const detail = (state, { sec }) => {
+const detail = (state, { sec, beats }) => {
   if (isNegligible(sec)) return '';
   const until = timeToDrift(state);
-  return `${until(0.5)} 뒤에는 반 박, ${until(1)} 뒤에는 한 박이 어긋납니다.`;
+  return `박자로는 ${fixed2(Math.abs(beats))}박 차이이고, ${until(0.5)}만 지나도 반 박이 어긋납니다. 길이를 ${percent2(fitRatio(state))}%로 조절하면 끝까지 맞습니다.`;
 };
 
 const tableRow = (state) => (bars) => {

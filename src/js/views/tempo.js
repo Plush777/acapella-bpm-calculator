@@ -4,9 +4,12 @@ import { closestReading, parseTime } from '../core/calc.js';
 import { duration, fixed2, isNegligible, percent2, trimNumber } from '../core/format.js';
 import { fitRatio } from '../core/selectors.js';
 import { isValidBpm, scaledBpm } from '../core/state.js';
+import { createCounter } from './count.js';
 import { byId, setHidden, setPressed, setText, setValue } from './dom.js';
 
 const BPM_NAMES = [['bi', '반주'], ['bv', '아카펠라']];
+
+const ratioCounter = createCounter(byId('ratio'), (value) => value.toFixed(2));
 
 const bpmError = (fields) => {
   const wrong = BPM_NAMES.find(([id]) => !isValidBpm(parseFloat(fields[id])));
@@ -15,13 +18,17 @@ const bpmError = (fields) => {
     : '';
 };
 
-const ratioSentence = (ratio) => {
+/** 결론을 먼저, 이유를 다음 문장에 쓴다. */
+const ratioSentences = ({ bi, bv }, ratio) => {
   const change = ratio * 100 - 100;
-  if (isNegligible(change)) return '두 BPM이 같아서 길이를 조절하지 않아도 됩니다.';
+  if (isNegligible(change)) {
+    return ['길이를 조절하지 않아도 됩니다.', `두 곡 모두 ${trimNumber(bi)} BPM입니다.`];
+  }
   const amount = fixed2(Math.abs(change));
+  const from = `아카펠라가 ${trimNumber(bv)} BPM에서 ${trimNumber(bi)} BPM으로`;
   return change > 0
-    ? `원본보다 ${amount}% 늘려 주세요. 아카펠라가 느려집니다.`
-    : `원본보다 ${amount}% 줄여 주세요. 아카펠라가 빨라집니다.`;
+    ? [`아카펠라 길이를 ${amount}% 늘려야 반주와 맞습니다.`, `${from} 느려집니다.`]
+    : [`아카펠라 길이를 ${amount}% 줄여야 반주와 맞습니다.`, `${from} 빨라집니다.`];
 };
 
 const newLength = (text, ratio) => {
@@ -50,8 +57,11 @@ export const renderRatio = (state) => {
   const closest = closestReading(bpm.bi, bpm.bv);
   const isFine = closest.factor === 1 || !isValidBpm(closest.bpm);
 
-  setText('ratio', percent2(ratio));
-  setText('say', ratioSentence(ratio));
+  ratioCounter.countTo(ratio * 100);
+  setText('ratio-sr', `${percent2(ratio)}%`);
+  const [verdict, reason] = ratioSentences(bpm, ratio);
+  setText('say', verdict);
+  setText('say2', reason);
   setText('fx', `${trimNumber(bpm.bv)} ÷ ${trimNumber(bpm.bi)} × 100`);
   setText('exact', `${(ratio * 100).toFixed(4)}%`);
   setText('speed', `${(1 / ratio).toFixed(4)}배`);
@@ -60,5 +70,5 @@ export const renderRatio = (state) => {
   setHidden('half', isFine);
   setText('half', isFine
     ? ''
-    : `아카펠라의 실제 BPM이 ${trimNumber(closest.bpm)}일 수도 있습니다. 원곡을 들으며 확인해 보세요.`);
+    : `아카펠라 BPM이 실제로는 ${trimNumber(closest.bpm)}일 수 있습니다. 맞다면 설정에서 ${closest.factor < 1 ? '절반으로' : '2배로'} 바꿔 주세요.`);
 };

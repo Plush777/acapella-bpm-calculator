@@ -1,20 +1,24 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" class="loading">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="반주와 아카펠라의 BPM을 입력하면 아카펠라 길이를 얼마나 조절해야 하는지 계산합니다.">
   <title>아카펠라 박자 계산기</title>
 
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-  <link rel="stylesheet" href="css/tokens.css">
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/layout.css">
-  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="/src/css/tokens.css">
+  <link rel="stylesheet" href="/src/css/base.css">
+  <link rel="stylesheet" href="/src/css/layout.css">
+  <link rel="stylesheet" href="/src/css/components.css">
 
-  <script type="module" src="js/main.js"></script>
+  <script type="module" src="/src/js/main.js"></script>
 </head>
 <body>
+  <!-- main.js가 실행되면 사라진다. 파일을 더블클릭해 열었을 때만 보인다. -->
+  <p class="hint boot" id="boot">계산기를 불러오지 못했습니다. 파일을 직접 열지 말고 웹사이트 주소로 접속해 주세요.</p>
+
   <div class="wrap">
 
     <header class="title">
@@ -22,49 +26,45 @@
       <h1>아카펠라 박자 계산기</h1>
     </header>
 
-    <!-- main.js가 실행되면 사라진다. 파일을 더블클릭해 열었을 때만 보인다. -->
-    <p class="hint boot" id="boot">계산기를 불러오지 못했습니다. 파일을 직접 열지 말고 웹사이트 주소로 접속해 주세요.</p>
-
     <div class="duo top">
 
       <!-- BPM 입력 -->
       <section class="panel" aria-label="BPM 입력">
-        <h2><svg class="icon" aria-hidden="true"><use href="img/icons.svg#pulse"/></svg>BPM 입력</h2>
+        <div class="head">
+          <h2><svg class="icon" aria-hidden="true"><use href="img/icons.svg#pulse"/></svg>BPM 입력</h2>
+          <!-- 화면이 좁을 때만 보인다 -->
+          <button type="button" class="icon-btn settings-btn" id="settings" aria-label="설정" aria-haspopup="dialog">
+            <svg class="icon" aria-hidden="true"><use href="img/icons.svg#gear"/></svg>
+          </button>
+        </div>
         <div>
           <label class="mark inst" for="bi">반주 BPM</label>
-          <div class="bpm">
-            <input id="bi" type="number" inputmode="decimal" min="20" max="400" step="any" value="67">
-            <button type="button" class="sub" id="tapi" aria-label="반주 BPM 측정">
-              <svg class="icon" aria-hidden="true"><use href="img/icons.svg#pulse"/></svg>BPM 측정
-            </button>
-          </div>
+          <input class="bpm" id="bi" type="number" inputmode="decimal" min="20" max="400" step="any" value="67">
         </div>
         <div>
           <label class="mark voc" for="bv">아카펠라 BPM</label>
-          <div class="bpm">
-            <input id="bv" type="number" inputmode="decimal" min="20" max="400" step="any" value="73">
-            <button type="button" class="sub" id="tapv" aria-label="아카펠라 BPM 측정">
-              <svg class="icon" aria-hidden="true"><use href="img/icons.svg#pulse"/></svg>BPM 측정
-            </button>
-          </div>
+          <input class="bpm" id="bv" type="number" inputmode="decimal" min="20" max="400" step="any" value="73">
         </div>
         <p class="err" id="err" role="alert" hidden></p>
-        <p class="note" id="tapnote" aria-live="polite"></p>
-        <div class="pair">
-          <fieldset>
-            <legend>박자</legend>
-            <div class="seg" id="meter">
-              <button type="button" data-v="4">4/4</button>
-              <button type="button" data-v="3">3/4</button>
-            </div>
-          </fieldset>
-          <fieldset>
-            <legend>아카펠라 BPM 변경</legend>
-            <div class="seg" id="scale">
-              <button type="button" data-m="0.5">절반으로</button>
-              <button type="button" data-m="2">2배로</button>
-            </div>
-          </fieldset>
+
+        <!-- 넓은 화면에서는 여기, 좁은 화면에서는 설정 창 안에 놓인다 -->
+        <div class="options-home" id="options-home">
+          <div class="pair" id="options">
+            <fieldset>
+              <legend>박자</legend>
+              <div class="seg" id="meter">
+                <button type="button" data-v="4">4/4</button>
+                <button type="button" data-v="3">3/4</button>
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend>아카펠라 BPM 변경</legend>
+              <div class="seg" id="scale">
+                <button type="button" data-m="0.5">절반으로</button>
+                <button type="button" data-m="2">2배로</button>
+              </div>
+            </fieldset>
+          </div>
         </div>
       </section>
 
@@ -77,16 +77,18 @@
           </button>
         </div>
         <div>
-          <div aria-live="polite">
-            <div class="big"><span id="ratio"></span><small>%</small></div>
+          <div class="big">
+            <span id="ratio" aria-hidden="true">108.96</span><small aria-hidden="true">%</small>
+            <span class="sr-only" id="ratio-sr" aria-live="polite">108.96%</span>
           </div>
-          <p class="verdict" id="say"></p>
+          <p class="verdict" id="say">아카펠라 길이를 8.96% 늘려야 반주와 맞습니다.</p>
+          <p class="note" id="say2">아카펠라가 73 BPM에서 67 BPM으로 느려집니다.</p>
         </div>
         <p class="hint" id="half" hidden></p>
         <dl class="facts">
-          <div><dt>계산식</dt><dd id="fx"></dd></div>
-          <div><dt>정확한 값</dt><dd id="exact"></dd></div>
-          <div><dt>재생 속도</dt><dd id="speed"></dd></div>
+          <div><dt>계산식</dt><dd id="fx">73 ÷ 67 × 100</dd></div>
+          <div><dt>정확한 값</dt><dd id="exact">108.9552%</dd></div>
+          <div><dt>재생 속도</dt><dd id="speed">0.9178배</dd></div>
         </dl>
         <div class="pair">
           <div>
@@ -95,44 +97,43 @@
           </div>
           <div>
             <p class="label">조절 후 길이</p>
-            <p class="len-out" id="nlen"></p>
+            <p class="len-out" id="nlen">10.90초</p>
           </div>
         </div>
         <textarea id="copybox" rows="1" readonly hidden aria-label="복사할 값"></textarea>
       </section>
     </div>
 
-    <!-- 메트로놈 -->
-    <section class="panel player" aria-label="메트로놈">
-      <h2><svg class="icon" aria-hidden="true"><use href="img/icons.svg#metronome"/></svg>메트로놈</h2>
-      <div class="player-controls">
-        <button type="button" class="main" id="play">
-          <svg class="icon" aria-hidden="true"><use id="playicon" href="img/icons.svg#play"/></svg><span id="playlabel">메트로놈 재생</span>
-        </button>
-        <fieldset>
-          <legend>재생할 아카펠라</legend>
-          <div class="seg" id="mode">
-            <button type="button" data-v="fit">길이 조절 후</button>
-            <button type="button" data-v="raw">원본</button>
-          </div>
-        </fieldset>
-        <fieldset>
-          <legend>구간</legend>
-          <div class="seg" id="bars">
-            <button type="button" data-v="4">4마디</button>
-            <button type="button" data-v="8">8마디</button>
-            <button type="button" data-v="16">16마디</button>
-            <button type="button" data-v="32">32마디</button>
-          </div>
-        </fieldset>
-      </div>
-      <p class="err" id="playerr" role="alert" hidden>이 브라우저에서는 소리를 재생할 수 없습니다.</p>
-    </section>
+    <!-- 박자 비교: 메트로놈으로 듣고, 그래프와 표로 본다 -->
+    <section class="panel" aria-label="박자 비교">
+      <h2><svg class="icon" aria-hidden="true"><use href="img/icons.svg#metronome"/></svg>박자 비교</h2>
 
-    <!-- 박자 차이 -->
-    <section class="panel" aria-label="박자 차이">
-      <h2><svg class="icon" aria-hidden="true"><use href="img/icons.svg#chart"/></svg>박자 차이</h2>
-      <svg id="tl" role="img" aria-label="반주와 아카펠라의 마디 위치 비교"></svg>
+      <div class="player">
+        <div class="player-controls">
+          <button type="button" class="main" id="play">
+            <svg class="icon" aria-hidden="true"><use id="playicon" href="img/icons.svg#play"/></svg><span id="playlabel">메트로놈 재생</span>
+          </button>
+          <fieldset>
+            <legend>재생할 아카펠라</legend>
+            <div class="seg" id="mode">
+              <button type="button" data-v="fit">길이 조절 후</button>
+              <button type="button" data-v="raw">원본</button>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>구간</legend>
+            <div class="seg" id="bars">
+              <button type="button" data-v="4">4마디</button>
+              <button type="button" data-v="8">8마디</button>
+              <button type="button" data-v="16">16마디</button>
+              <button type="button" data-v="32">32마디</button>
+            </div>
+          </fieldset>
+        </div>
+        <p class="err" id="playerr" role="alert" hidden>이 브라우저에서는 소리를 재생할 수 없습니다.</p>
+        <svg id="tl" role="img" aria-label="반주와 아카펠라의 마디 위치 비교"></svg>
+      </div>
+
       <div>
         <p class="verdict" id="drift"></p>
         <p class="note" id="drift2"></p>
@@ -151,42 +152,49 @@
     <section class="guide" aria-label="사용 안내">
       <div>
         <h2><svg class="icon" aria-hidden="true"><use href="img/icons.svg#info"/></svg>사용 안내</h2>
-        <p>반주와 아카펠라의 BPM을 입력하면 아카펠라 길이를 얼마나 조절해야 하는지 계산해 드립니다.</p>
+        <p>반주와 아카펠라의 BPM을 입력하면 아카펠라 길이를 얼마나 조절해야 하는지 알려 줍니다.</p>
       </div>
       <ul class="guide-list">
         <li>
-          <svg class="icon" aria-hidden="true"><use href="img/icons.svg#pulse"/></svg>
-          <h3>BPM 측정</h3>
-          <p>BPM을 모르면 음악을 들으면서 박자에 맞춰 BPM 측정 버튼을 4번 이상 눌러 주세요.</p>
-        </li>
-        <li>
-          <svg class="icon" aria-hidden="true"><use href="img/icons.svg#swap"/></svg>
-          <h3>아카펠라 BPM 변경</h3>
-          <p>입력한 BPM이 실제보다 2배 빠르거나 느릴 때 버튼을 눌러 바꿔 주세요.</p>
+          <svg class="icon" aria-hidden="true"><use href="img/icons.svg#gear"/></svg>
+          <h3>박자와 BPM 변경</h3>
+          <p>입력한 BPM이 실제의 절반이나 2배라면 아카펠라 BPM 변경으로 바꿔 주세요. 폰에서는 BPM 입력 옆의 설정 버튼에 있습니다.</p>
         </li>
         <li>
           <svg class="icon" aria-hidden="true"><use href="img/icons.svg#stretch"/></svg>
           <h3>길이 조절</h3>
-          <p>Cakewalk에서는 아카펠라 클립을 선택하고 <kbd>Shift</kbd> <kbd>I</kbd> 키를 함께 누른 뒤, AudioSnap의 Stretch Amount에 길이 비율을 입력하세요. 속도를 바꾸지 않은 원본에 적용해야 합니다.</p>
+          <p>Cakewalk에서는 Stretch Amount에 길이 비율을 입력하세요. 아카펠라 클립을 선택하고 <kbd>Shift</kbd> <kbd>I</kbd> 키를 함께 누르면 AudioSnap 항목에 있습니다. 속도를 바꾸지 않은 원본에 적용해야 합니다.</p>
         </li>
         <li>
           <svg class="icon" aria-hidden="true"><use href="img/icons.svg#metronome"/></svg>
           <h3>메트로놈</h3>
-          <p>박자 차이를 소리로 들려줍니다. 왼쪽이 반주, 오른쪽이 아카펠라이고 이어폰으로 들으면 구분하기 쉽습니다.</p>
+          <p>왼쪽에서 반주, 오른쪽에서 아카펠라의 박자가 들립니다. 재생하는 동안 그래프에 지금 위치가 표시됩니다.</p>
         </li>
         <li>
           <svg class="icon" aria-hidden="true"><use href="img/icons.svg#chart"/></svg>
-          <h3>박자 차이</h3>
-          <p>첫 박을 맞췄을 때 뒤로 갈수록 박자가 얼마나 어긋나는지 보여 줍니다. 짧은 구간은 원본을 그대로 써도 괜찮지만, 긴 구간은 처음과 중간, 끝을 모두 들어 보세요.</p>
+          <h3>그래프 보는 법</h3>
+          <p>맨 위가 아카펠라 원본, 가운데가 반주, 맨 아래가 길이를 조절한 아카펠라입니다. 세로선이 마디의 시작입니다.</p>
         </li>
         <li>
           <svg class="icon" aria-hidden="true"><use href="img/icons.svg#alert"/></svg>
           <h3>알아 두세요</h3>
-          <p>두 곡의 BPM이 처음부터 끝까지 일정하다고 보고 계산합니다. 아카펠라가 들어오는 위치는 직접 들으면서 맞춰 주세요.</p>
+          <p>두 곡의 BPM이 일정할 때만 정확합니다. 아카펠라가 들어오는 위치는 직접 들으면서 맞춰 주세요.</p>
         </li>
       </ul>
     </section>
 
   </div>
+
+  <!-- 설정 (좁은 화면에서만 쓴다) -->
+  <dialog class="sheet" id="sheet" aria-labelledby="sheet-title">
+    <div class="head">
+      <h2 id="sheet-title">설정</h2>
+      <button type="button" class="icon-btn" id="sheet-close" aria-label="설정 닫기">
+        <svg class="icon" aria-hidden="true"><use href="img/icons.svg#close"/></svg>
+      </button>
+    </div>
+    <div id="sheet-body"></div>
+    <button type="button" class="main" id="sheet-done">완료</button>
+  </dialog>
 </body>
 </html>

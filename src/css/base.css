@@ -38,4 +38,8 @@ kbd {
 
 .err { color: var(--error); font-size: var(--size-small); }
 
+.loading .wrap { visibility: hidden; animation: reveal 1ms 2s forwards; }
+
+@keyframes reveal { to { visibility: visible; } }
+
 :focus-visible { outline: 3px solid var(--primary-50); outline-offset: 2px; }
