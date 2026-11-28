@@ -103,15 +103,6 @@ npm run preview   # 만든 배포용 파일 미리 보기
 | `src/js/views` | 화면 그리기 |
 | `public/img/icons.svg` | 아이콘 (빌드할 때 그대로 복사) |
 
-## 사용 기술
-
-- HTML, CSS, 순수 JavaScript (ES6 모듈, 함수형)
-- 빌드 도구: [Vite](https://vite.dev)
-- 글꼴: [Pretendard](https://github.com/orioncactus/pretendard)
-- 디자인 참고: [KRDS](https://www.krds.go.kr/html/site/index.html)의 색상, 글자 크기, 컴포넌트 모양
-
-개인이 만든 도구이며 정부 서비스가 아닙니다.
-
 ## 라이선스
 
 [MIT License](LICENSE)

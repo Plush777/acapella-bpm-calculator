@@ -53,7 +53,6 @@
   --panel: var(--gray-0);
   --subtle: var(--gray-5);
   --intro: var(--secondary-5);
-  --player: var(--primary-5);
   --playing: var(--gray-80);
 
   --ink: var(--gray-90);
@@ -124,7 +123,6 @@
     --panel: var(--gray-95);
     --subtle: var(--gray-90);
     --intro: var(--secondary-95);
-    --player: var(--primary-95);
     --playing: var(--gray-70);
 
     --ink: var(--gray-5);

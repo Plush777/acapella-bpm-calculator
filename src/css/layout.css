@@ -55,7 +55,9 @@
 
 @media (max-width: 600px) {
   .wrap {
-    padding-block: 24px 64px;
+    /* 아래 여백도 위와 같게. 홈 표시줄이 있는 폰은 그만큼 더한다. */
+    padding-top: 24px;
+    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
     padding-left: max(16px, env(safe-area-inset-left, 0px));
     padding-right: max(16px, env(safe-area-inset-right, 0px));
     gap: 16px;

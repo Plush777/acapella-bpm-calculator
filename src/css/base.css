@@ -3,6 +3,9 @@
 
 [hidden] { display: none !important; }
 
+/* 폰에서 누를 때 생기는 회색 터치 영역 표시를 없앤다 */
+html { -webkit-tap-highlight-color: transparent; }
+
 body {
   margin: 0;
   background: var(--bg);
