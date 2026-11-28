@@ -8,12 +8,28 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "app:sync": "vite build && cap sync",
+    "android": "cap open android",
+    "ios": "cap open ios",
+    "desktop": "vite build && npm --prefix electron start",
+    "desktop:win": "vite build && npm --prefix electron run dist:win",
+    "desktop:mac": "vite build && npm --prefix electron run dist:mac",
+    "icons": "node scripts/icons.mjs && capacitor-assets generate --android --ios --iconBackgroundColor \"#256ef4\" --iconBackgroundColorDark \"#256ef4\" --splashBackgroundColor \"#ffffff\" --splashBackgroundColorDark \"#131416\""
   },
   "devDependencies": {
+    "@capacitor/android": "8.6.2",
+    "@capacitor/assets": "4.0.0",
+    "@capacitor/cli": "8.6.2",
+    "@capacitor/ios": "8.6.2",
+    "sharp": "0.35.5",
     "vite": "8.3.8"
   },
   "engines": {
-    "node": "^20.19.0 || >=22.12.0"
+    "node": ">=22.12.0"
+  },
+  "dependencies": {
+    "@capacitor/core": "8.6.2",
+    "pretendard": "1.3.9"
   }
 }

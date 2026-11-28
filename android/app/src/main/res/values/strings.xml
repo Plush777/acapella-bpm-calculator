@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">아카펠라 박자 계산기</string>
+    <string name="title_activity_main">아카펠라 박자 계산기</string>
+    <string name="package_name">io.github.plush777.acapellabpm</string>
+    <string name="custom_url_scheme">io.github.plush777.acapellabpm</string>
+</resources>

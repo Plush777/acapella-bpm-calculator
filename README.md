@@ -69,7 +69,7 @@ Cakewalk에서는 다음 순서로 적용합니다.
 
 ## 실행 방법
 
-[Vite](https://vite.dev)로 개발하고 빌드합니다. Node.js 20.19 이상이 필요합니다.
+[Vite](https://vite.dev)로 개발하고 빌드합니다. Node.js 22.12 이상이 필요합니다.
 
 ```bash
 npm install       # 처음 한 번만
@@ -87,12 +87,58 @@ npm run preview   # 만든 배포용 파일 미리 보기
 
 `main` 브랜치에 올리면 Render가 자동으로 빌드해서 배포합니다.
 
+## 앱으로 만들기
+
+같은 웹 코드로 PC 앱, 안드로이드 앱, iOS 앱을 만듭니다. 앱은 화면 파일을 안에 담고 있어서 인터넷 없이도 동작합니다.
+
+| 플랫폼 | 도구 | 필요한 것 |
+|---|---|---|
+| Windows, Mac | [Electron](https://www.electronjs.org) | Mac 앱은 Mac에서 빌드 |
+| 안드로이드 | [Capacitor](https://capacitorjs.com) | [Android Studio](https://developer.android.com/studio) |
+| iOS | [Capacitor](https://capacitorjs.com) | Mac과 Xcode, 아이폰에 설치하려면 Apple 개발자 계정 |
+
+화면이나 계산 코드를 고친 뒤에는 앱마다 다시 빌드해야 반영됩니다.
+
+### PC 앱 (Electron)
+
+```bash
+npm install --prefix electron   # 처음 한 번만
+npm run desktop                 # 앱 실행해 보기
+npm run desktop:win             # Windows 설치 파일 만들기
+npm run desktop:mac             # Mac 설치 파일 만들기 (Mac에서)
+```
+
+설치 파일은 `electron/release` 폴더에 만들어집니다. Windows에서는 프로젝트 폴더 경로가 너무 길면 앱이 실행되지 않으니 `C:\dev\acapella-bpm-calculator`처럼 짧은 경로에 두세요.
+
+### 안드로이드 앱 (Capacitor)
+
+1. Android Studio를 설치합니다.
+2. `npm run app:sync`로 최신 화면을 안드로이드 프로젝트에 복사합니다.
+3. `npm run android`로 Android Studio를 엽니다.
+4. 폰을 연결하고 실행하거나, **Build > Build App Bundle(s) / APK(s) > Build APK(s)** 로 설치 파일을 만듭니다.
+
+### iOS 앱 (Capacitor, Mac에서)
+
+1. Xcode를 설치합니다.
+2. `npm install` 다음 `npm run app:sync`를 실행합니다.
+3. `npm run ios`로 Xcode를 엽니다.
+4. **Signing & Capabilities**에서 Apple 계정(팀)을 고르고 아이폰을 연결해 실행합니다.
+
+### 앱 아이콘
+
+`npm run icons`를 실행하면 `scripts/icons.mjs`가 로고 이미지를 `assets` 폴더에 만들고, 그것으로 안드로이드, iOS, PC 앱 아이콘과 시작 화면을 만듭니다.
+
 ## 폴더 구조
 
 | 위치 | 내용 |
 |---|---|
 | `index.html` | 화면 구조와 문구 |
 | `vite.config.js` | Vite 설정 |
+| `capacitor.config.json` | 앱 이름과 ID 등 모바일 앱 설정 |
+| `android`, `ios` | 모바일 앱 프로젝트 (Capacitor가 만든 것) |
+| `electron` | PC 앱 (Electron) |
+| `assets`, `scripts/icons.mjs` | 앱 아이콘과 시작 화면 원본, 만드는 스크립트 |
+| `src/css/fonts.css` | 프로젝트에 포함한 Pretendard 글꼴 |
 | `src/css/tokens.css` | 색상, 글자 크기, 둥글기, 어두운 화면 |
 | `src/css/base.css` | 기본 글자 |
 | `src/css/layout.css` | 배치 |

@@ -57,6 +57,9 @@ export const createClickPlayer = ({ onStart, onStop, onProgress, onUnsupported }
       return;
     }
 
+    // 아이폰에서 무음 스위치가 켜져 있어도 메트로놈이 들리게 한다. 지원하지 않는 브라우저는 그냥 지나간다.
+    if (navigator.audioSession) navigator.audioSession.type = 'playback';
+
     const current = new Context();
     const startAt = current.currentTime + LEAD_IN;
     const end = Math.max(

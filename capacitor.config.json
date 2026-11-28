@@ -1,0 +1,9 @@
+{
+  "appId": "io.github.plush777.acapellabpm",
+  "appName": "아카펠라 박자 계산기",
+  "webDir": "dist",
+  "backgroundColor": "#ffffff",
+  "ios": {
+    "contentInset": "never"
+  }
+}

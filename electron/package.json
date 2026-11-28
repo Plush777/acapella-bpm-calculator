@@ -1,0 +1,46 @@
+{
+  "name": "acapella-bpm-calculator-desktop",
+  "productName": "아카펠라 박자 계산기",
+  "version": "1.0.0",
+  "private": true,
+  "description": "아카펠라 박자 계산기 PC 앱",
+  "author": "Plush777",
+  "license": "MIT",
+  "main": "main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "dist:win": "electron-builder --win",
+    "dist:mac": "electron-builder --mac"
+  },
+  "devDependencies": {
+    "electron": "45.3.2",
+    "electron-builder": "26.18.0"
+  },
+  "build": {
+    "appId": "io.github.plush777.acapellabpm",
+    "productName": "아카펠라 박자 계산기",
+    "artifactName": "acapella-bpm-calculator-${version}-${os}-${arch}.${ext}",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.cjs",
+      "package.json",
+      { "from": "../dist", "to": "web" }
+    ],
+    "win": {
+      "target": ["nsis"],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "mac": {
+      "target": ["dmg"],
+      "icon": "build/icon.png",
+      "category": "public.app-category.music"
+    }
+  }
+}
